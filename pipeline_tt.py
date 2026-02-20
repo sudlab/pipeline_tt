@@ -47,7 +47,7 @@ def index_genome(infiles, outfile):
          --sjdbGTFfile %(outdir)s/geneset.gtf
          --sjdbOverhang %(star_overhang)s
          --runThreadN %(star_threads)s
-         --genomeDAsparseD 2
+         --genomeSAsparseD 2
          --genomeSAindexNbases 10 > %(logfile)s &&
          
     rm %(outdir)s/geneset.gtf'''
