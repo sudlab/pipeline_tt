@@ -25,7 +25,7 @@ def merge_genesets(infiles, outfile):
     statement = '''cat %(infiles)s > %(outfile)s'''
     P.run(statement)
 
-@follow(mkdir("star_index.dir"))
+@follows(mkdir("star_index.dir"))
 @merge((merge_genomes, merge_genesets),
        "star_index.dir/SA")
 def index_genome(infiles, outfile):
