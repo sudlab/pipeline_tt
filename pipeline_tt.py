@@ -1,7 +1,7 @@
 from cgatcore import pipeline as P
 from ruffus import originate, transform, merge, follows, mkdir
 import os
-PARAM = P.get_parameters("pipeline.yml")
+PARAMS = P.get_parameters("pipeline.yml")
 
 @merge((PARAMS["target_genome"], PARAMS["spikein_genome"]),
         "merged_genome.fa")
