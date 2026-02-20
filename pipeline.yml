@@ -1,0 +1,13 @@
+target:
+   genome:
+   geneset:
+
+spikein:
+   genome:
+   geneset:
+
+star:
+   overhang:
+   threads:
+   index_memory:
+
