@@ -1,6 +1,8 @@
 from cgatcore import pipeline as P
 from ruffus import originate, transform, merge, follows, mkdir
 import os
+import sys
+
 PARAMS = P.get_parameters("pipeline.yml")
 
 @merge((PARAMS["target_genome"], PARAMS["spikein_genome"]),
@@ -52,4 +54,4 @@ def index_genome(infiles, outfile):
 
     P.run(statement, job_threads=PARAMS["star_threads"], job_memory=PARAMS["star_index_memory"])
 
-    
+P.main(sys.argv)
