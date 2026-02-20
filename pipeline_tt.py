@@ -36,7 +36,7 @@ def index_genome(infiles, outfile):
 
     fasta, geneset = infiles
     logfile = "star_index.log"
-    outdir = os.dirname(outfile)
+    outdir = os.path.dirname(outfile)
 
     statement = '''
     zcat %(geneset)s > %(outdir)s/geneset.gtf &&
