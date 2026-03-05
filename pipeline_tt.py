@@ -29,7 +29,8 @@ def merge_genesets(infiles, outfile):
 
     statement = '''
     sed 's/^/spikein_/' %(spikein)s
-    | cat - %(target)s > %(outfile)s'''
+    | cat - %(target)s
+    | gzip > %(outfile)s'''
     
     P.run(statement)
 
@@ -60,4 +61,17 @@ def index_genome(infiles, outfile):
 
     P.run(statement, job_threads=PARAMS["star_threads"], job_memory=PARAMS["star_index_memory"])
 
+@follows(mkdir("star.dir"))
+@collate("*.fastq.?.gz",
+         regex("(.+).fastq...gz"),
+         add_inputs(index_genome),
+         r"star.dir/\1.bam")
+def map_with_star(infiles, outfile):
+    read1, read2, index = infiles
+
+    ...stuff here...
+
+
+
+    
 P.main(sys.argv)
