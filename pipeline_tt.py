@@ -11,9 +11,12 @@ def merge_genomes(infiles, outfile):
     ''' This function merges together the target genome and the spike=in genome ready
     for indexing'''
 
-    infiles = " ".join(infiles)
+    target, spikein = infiles
 
-    statement = '''cat %(infiles)s > %(outfile)s'''
+    statement = '''
+    sed 's/^>/>spike_/' %(spikein)s 
+    | cat %(target)s > %(outfile)s'''
+    
     P.run(statement)
 
 @merge((PARAMS["target_geneset"], PARAMS["spikein_geneset"]),
@@ -22,9 +25,12 @@ def merge_genesets(infiles, outfile):
     ''' This function merges together the target genome and the spike=in genome ready
     for indexing'''
 
-    infiles = " ".join(infiles)
+    target, spikein = infiles
 
-    statement = '''cat %(infiles)s > %(outfile)s'''
+    statement = '''
+    sed 's/^/spikein_/' %(spikein)s
+    | cat %(target)s > %(outfile)s'''
+    
     P.run(statement)
 
 @follows(mkdir("star_index.dir"))
