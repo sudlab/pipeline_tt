@@ -14,8 +14,8 @@ def merge_genomes(infiles, outfile):
     target, spikein = infiles
 
     statement = '''
-    sed 's/^>/>spike_/' %(spikein)s 
-    | cat %(target)s > %(outfile)s'''
+    sed 's/^>/>spikein_/' %(spikein)s 
+    | cat - %(target)s > %(outfile)s'''
     
     P.run(statement)
 
@@ -29,7 +29,7 @@ def merge_genesets(infiles, outfile):
 
     statement = '''
     sed 's/^/spikein_/' %(spikein)s
-    | cat %(target)s > %(outfile)s'''
+    | cat - %(target)s > %(outfile)s'''
     
     P.run(statement)
 
