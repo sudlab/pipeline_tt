@@ -69,7 +69,13 @@ def index_genome(infiles, outfile):
 def map_with_star(infiles, outfile):
     read1, read2, index = infiles
 
-    ...stuff here...
+    statement = '''
+    STAR --runThreadN 12
+         --genomeDir ~/mnt/parscratch/users/mbp22agw/genomes/index/
+         --readFilesIn ~/mnt/parscratch/users/mbp22agw/UL2_rnaseq/quant/*-TT*.fastq.1.gz ~/mnt/parscratch/users/mbp22agw/UL2_rnaseq/quant/*-TT*.fastq.2.gz
+         --readFilesCommand zcat
+         --outFileNamePrefix ./
+         --outSAMtype BAM Unsorted
 
 
 
