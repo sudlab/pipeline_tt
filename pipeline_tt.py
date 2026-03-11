@@ -69,9 +69,14 @@ def index_genome(infiles, outfile):
 def map_with_star(infiles, outfile):
     read1, read2, index = infiles
 
-    ...stuff here...
+    statement = '''
+    STAR --runThreadN 8
+         --genomeDir %(index)s
+         --readFilesIn %(read1)s %(read2)s
+         --readFilesCommand zcat
+         --outFileNamePrefix = P.snip(outfile, ".bam")
+         --outSAMtype BAM Unsorted'''
 
+P.run(statement, job_threads=8, job_memory=4G)
 
-
-    
 P.main(sys.argv)
