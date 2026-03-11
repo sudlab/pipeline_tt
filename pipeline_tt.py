@@ -70,14 +70,13 @@ def map_with_star(infiles, outfile):
     read1, read2, index = infiles
 
     statement = '''
-    STAR --runThreadN 12
-         --genomeDir ~/mnt/parscratch/users/mbp22agw/genomes/index/
-         --readFilesIn ~/mnt/parscratch/users/mbp22agw/UL2_rnaseq/quant/*-TT*.fastq.1.gz ~/mnt/parscratch/users/mbp22agw/UL2_rnaseq/quant/*-TT*.fastq.2.gz
+    STAR --runThreadN 8
+         --genomeDir %(index)s
+         --readFilesIn %(read1)s %(read2)s
          --readFilesCommand zcat
-         --outFileNamePrefix ./
-         --outSAMtype BAM Unsorted
+         --outFileNamePrefix = P.snip(outfile, ".bam")
+         --outSAMtype BAM Unsorted'''
 
+P.run(statement, job_threads=8, job_memory=4G)
 
-
-    
 P.main(sys.argv)
