@@ -1,5 +1,5 @@
 from cgatcore import pipeline as P
-from ruffus import originate, transform, merge, follows, mkdir
+from ruffus import originate, transform, merge, follows, mkdir, collate, regex, add_inputs
 import os
 import sys
 
@@ -28,8 +28,9 @@ def merge_genesets(infiles, outfile):
     target, spikein = infiles
 
     statement = '''
-    sed 's/^/spikein_/' %(spikein)s
-    | cat - %(target)s
+    zcat %(spikein)s |
+    sed 's/^/spikein_/' 
+    | cat - <(zcat %(target)s)
     | gzip > %(outfile)s'''
     
     P.run(statement)
@@ -59,7 +60,9 @@ def index_genome(infiles, outfile):
          
     rm %(outdir)s/geneset.gtf'''
 
-    P.run(statement, job_threads=PARAMS["star_threads"], job_memory=PARAMS["star_index_memory"])
+    P.run(statement, 
+          job_threads=PARAMS["star_threads"],
+          job_memory=PARAMS["star_index_memory"])
 
 @follows(mkdir("star.dir"))
 @collate("*.fastq.?.gz",
@@ -67,16 +70,20 @@ def index_genome(infiles, outfile):
          add_inputs(index_genome),
          r"star.dir/\1.bam")
 def map_with_star(infiles, outfile):
-    read1, read2, index = infiles
+    read1 = infiles[0][0]
+    read2 = infiles[1][0]
+
+    out_prefix = P.snip(outfile, ".bam")
 
     statement = '''
-    STAR --runThreadN 8
-         --genomeDir %(index)s
+    STAR --runThreadN %(star_threads)s
+         --genomeDir star_index.dir
          --readFilesIn %(read1)s %(read2)s
          --readFilesCommand zcat
-         --outFileNamePrefix = P.snip(outfile, ".bam")
+         --outFileNamePrefix %(out_prefix)s
          --outSAMtype BAM Unsorted'''
 
-P.run(statement, job_threads=8, job_memory=4G)
+    P.run(statement, job_threads=PARAMS["star_threads"],
+          job_memory=PARAMS["star_memory"])
 
 P.main(sys.argv)

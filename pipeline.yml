@@ -9,5 +9,6 @@ spikein:
 star:
    overhang:
    threads:
+   memory:
    index_memory:
 
