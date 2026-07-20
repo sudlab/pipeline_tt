@@ -12,3 +12,6 @@ star:
    memory:
    index_memory:
 
+featurecounts:
+   threads:
+

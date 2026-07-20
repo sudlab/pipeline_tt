@@ -68,7 +68,7 @@ def index_genome(infiles, outfile):
 @collate("*.fastq.?.gz",
          regex("(.+).fastq...gz"),
          add_inputs(index_genome),
-         r"star.dir/\1.bam")
+         r"star.dir/\1Aligned.out.bam")
 def map_with_star(infiles, outfile):
     read1 = infiles[0][0]
     read2 = infiles[1][0]
@@ -85,5 +85,25 @@ def map_with_star(infiles, outfile):
 
     P.run(statement, job_threads=PARAMS["star_threads"],
           job_memory=PARAMS["star_memory"])
+
+@merge([map_with_star, merge_genesets], "read_counts.tsv")
+def count_with_featureCounts(infiles, outfile):
+
+    bamfiles, gtf_file = infiles[:-1], infiles[-1]
+
+    bamfiles = " ".join(bamfiles)
+
+    statement = '''
+    featureCounts -a %(gtf_file)s
+                  -o %(outfile)s
+                  -t transcript
+                  -p
+                  -B
+                  -T %(featurecounts_threads)s
+                   %(bamfiles)s > %(outfile)s.log
+    '''
+
+    P.run(statement, job_threads=PARAMS["featurecounts_threads"])
+
 
 P.main(sys.argv)
